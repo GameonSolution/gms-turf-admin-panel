@@ -17,12 +17,16 @@ export default {
       },
       colors: {
         primary: {
-            light: '#f5f5f5', // Light gray for light mode
-          dark: '#1f2937', // Dark mode primary color
+            light: '#0f150e', // Light gray for light mode
+          dark: '#0f150e', // Dark mode primary color
+          //   light: '#f5f5f5', // Light gray for light mode
+          // dark: '#1f2937', // Dark mode primary color
         },
         secondary: {
-          light: '#4B5563', // New light mode secondary color (light blue-gray)
-          dark: '#1a202c',  // New dark mode secondary color (darker slate gray)
+          light: '#febc12', // New light mode secondary color (light blue-gray)
+          dark: '#febc12',  // New dark mode secondary color (darker slate gray)
+          // light: '#4B5563', // New light mode secondary color (light blue-gray)
+          // dark: '#1a202c',  // New dark mode secondary color (darker slate gray)
         },
         blueButton: {
           DEFAULT: '#1E40AF', // Default blue button color
