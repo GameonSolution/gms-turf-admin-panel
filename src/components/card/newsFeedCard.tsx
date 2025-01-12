@@ -29,17 +29,15 @@ const NewsFeedCard = ({ newsFeed, handleEdit, handleDelete }: NewsFeedCardProps)
   return (
     <motion.div
     key={newsFeed.id}
-    // style={{height:`${height}vh`}}
-    className={`border  border-white border-opacity-30 shadow-lg p-4 rounded-lg transition-transform transform hover:scale-105 bg-gray-700 group`}
+    className={`relative border border-white border-opacity-30 shadow-lg p-4 rounded-lg transition-transform transform hover:scale-105 bg-gray-700 group overflow-hidden`}
     whileHover={{ scale: 1.05 }}
   >
     <div className="flex justify-between items-center mb-3">
-   
       <p className="text-gray-400 text-xs">{new Date(newsFeed.date).toLocaleDateString()}</p>
     </div>
-
+  
     {/* Description Section */}
-     <div className="mb-4">
+    <div className="mb-4">
       <p className="text-sm text-gray-300">{displayText}</p>
       {newsFeed.details.length > maxDescriptionLength && (
         <button
@@ -50,7 +48,7 @@ const NewsFeedCard = ({ newsFeed, handleEdit, handleDelete }: NewsFeedCardProps)
         </button>
       )}
     </div>
-
+  
     {/* Media Section */}
     <div className="flex flex-col mb-4">
       {newsFeed.mediaUrl && (
@@ -94,9 +92,9 @@ const NewsFeedCard = ({ newsFeed, handleEdit, handleDelete }: NewsFeedCardProps)
         </div>
       )}
     </div>
-
+  
     {/* Action Buttons */}
-    <div className="flex items-end justify-end w-full right-2 group  absolute  top-3 ">
+    <div className="flex items-end justify-end w-full absolute top-3 right-2">
       <button
         onClick={() => handleEdit(newsFeed)}
         className="text-white p-1 rounded flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -111,6 +109,7 @@ const NewsFeedCard = ({ newsFeed, handleEdit, handleDelete }: NewsFeedCardProps)
       </button>
     </div>
   </motion.div>
+  
   
   );
 };
