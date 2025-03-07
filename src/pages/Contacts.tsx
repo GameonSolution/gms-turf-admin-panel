@@ -179,7 +179,7 @@ import useSidebarStore from "../store/sidebar";
 import { useContacts } from "../hook/useContacts";
 import { Contact, ContactsData } from "../types/types";
 import Table from "../components/table/main";
-import '../index.css'
+import "../index.css";
 import Button from "../components/button/main";
 
 const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
@@ -203,7 +203,7 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
       ...contacts.map((contact) => [
         contact.name,
         contact.email,
-        // contact.phone,
+        contact.phone,
         contact.message,
       ]),
     ]
@@ -233,7 +233,7 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
   const columns = [
     // { key: "profile", title: "Profile", type: "text" },
     { key: "name", title: "User Name", type: "text" },
-    // { key: "phone", title: "Contact Number", type: "text" },
+    { key: "phone", title: "Contact Number", type: "text" },
     { key: "email", title: "Email ID", type: "email" },
     { key: "message", title: "Messages", type: "text" },
   ];
@@ -256,8 +256,10 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
           </button>
           Contacts
         </h1>
-        <Button text={"Export"} needIcon={false}                     onClick={() => exportToCSV(data.data.contacts)}
-
+        <Button
+          text={"Export"}
+          needIcon={false}
+          onClick={() => exportToCSV(data.data.contacts)}
         />
         {/* <button
           onClick={() => exportToCSV(data.data.contacts)}
@@ -268,22 +270,22 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
       </header>
 
       {/* Table Container */}
-      
-          <div className="flex-1 custom-scrollbar overflow-hidden ">
-            <div className="min-w-full p-1 overflow-auto">
-              {data?.data?.contacts?.length < 0 ? (
-                <p>no data</p>
-              ) : (
-                <Table
-                  darkMode={true}
-                  columns={columns as any}
-                  loading={data.isLoading}
-                  data={data?.data?.contacts}
-                />
-              )}
-            </div>
-          </div>
-      
+
+      <div className="flex-1 custom-scrollbar overflow-hidden ">
+        <div className="min-w-full p-1 overflow-auto">
+          {data?.data?.contacts?.length < 0 ? (
+            <p>no data</p>
+          ) : (
+            <Table
+              darkMode={true}
+              columns={columns as any}
+              loading={data.isLoading}
+              data={data?.data?.contacts}
+            />
+          )}
+        </div>
+      </div>
+
       {/* <div className="flex-1 overflow-hidden p-4">
         {data.isLoading ? (
           <div className="flex items-center justify-center h-full">
@@ -337,31 +339,34 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
 
       {/* Pagination */}
       <div className="flex justify-center items-center p-3 bg-gray-700 rounded-t-lg shadow-md">
-    <button
-        onClick={handlePreviousPage}
-        disabled={currentPage === 1}
-        className={`w-24 px-3 py-1 bg-gray-600 text-white rounded-full mx-1 text-sm transition duration-300 
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={`w-24 px-3 py-1 bg-gray-600 text-white rounded-full mx-1 text-sm transition duration-300 
             hover:bg-gray-500 hover:scale-105 ${
-                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+              currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
             } shadow-md`}
-    >
-        Previous
-    </button>
+        >
+          Previous
+        </button>
 
-    <span className="mx-2 font-medium text-sm text-gray-300">Page {currentPage}</span>
+        <span className="mx-2 font-medium text-sm text-gray-300">
+          Page {currentPage}
+        </span>
 
-    <button
-        onClick={handleNextPage}
-        disabled={ContactsData?.pageCount <= 1}
-        className={`w-24 px-3 py-1 bg-gray-600 text-white rounded-full mx-1 text-sm transition duration-300 
+        <button
+          onClick={handleNextPage}
+          disabled={ContactsData?.pageCount <= 1}
+          className={`w-24 px-3 py-1 bg-gray-600 text-white rounded-full mx-1 text-sm transition duration-300 
             hover:bg-gray-500 hover:scale-105 ${
-                ContactsData?.pageCount <= 1 ? "opacity-50 cursor-not-allowed" : ""
+              ContactsData?.pageCount <= 1
+                ? "opacity-50 cursor-not-allowed"
+                : ""
             } shadow-md`}
-    >
-        Next
-    </button>
-</div>
-
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
