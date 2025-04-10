@@ -173,120 +173,121 @@
 // };
 
 // export default Contacts;
-import React, { useEffect, useState } from "react";
-import { MdViewSidebar } from "react-icons/md";
-import useSidebarStore from "../store/sidebar";
-import { useContacts } from "../hook/useContacts";
-import { Contact, ContactsData } from "../types/types";
-import Table from "../components/table/main";
-import "../index.css";
-import Button from "../components/button/main";
+// import React, { useEffect, useState } from "react";
+// import { MdViewSidebar } from "react-icons/md";
+// import useSidebarStore from "../store/sidebar";
+// import { useContacts } from "../hook/useContacts";
+// import { Contact, ContactsData } from "../types/types";
+// import Table from "../components/table/main";
+// import "../index.css";
+// import Button from "../components/button/main";
 
-const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
-  const { toggleMobileSidebar } = useSidebarStore();
-  const { getContacts } = useContacts();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 25;
-  const data = getContacts(currentPage, itemsPerPage) as any;
-  const ContactsData = data.data as ContactsData;
-  useEffect(() => {
-    const fetchContacts = () => {
-      data.refetch();
-    };
+// const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
+//   const { toggleMobileSidebar } = useSidebarStore();
+//   const { getContacts } = useContacts();
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const itemsPerPage = 25;
+//   const data = getContacts(currentPage, itemsPerPage) as any;
+//   const ContactsData = data.data as ContactsData;
+//   useEffect(() => {
+//     const fetchContacts = () => {
+//       data.refetch();
+//     };
 
-    fetchContacts();
-  }, [currentPage]);
+//     fetchContacts();
+//   }, [currentPage]);
 
-  const exportToCSV = (contacts: Contact[]) => {
-    const csvContent = [
-      ["Name", "Email", "Message"],
-      ...contacts.map((contact) => [
-        contact.name,
-        contact.email,
-        contact.phone,
-        contact.message,
-      ]),
-    ]
-      .map((row) => row.join(","))
-      .join("\n");
+//   const exportToCSV = (contacts: Contact[]) => {
+//     const csvContent = [
+//       ["Name", "Email", "Message"],
+//       ...contacts.map((contact) => [
+//         contact.name,
+//         contact.email,
+//         contact.phone,
+//         contact.message,
+//       ]),
+//     ]
+//       .map((row) => row.join(","))
+//       .join("\n");
 
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "contacts.csv";
-    link.click();
-  };
+//     const blob = new Blob([csvContent], { type: "text/csv" });
+//     const link = document.createElement("a");
+//     link.href = URL.createObjectURL(blob);
+//     link.download = "contacts.csv";
+//     link.click();
+//   };
 
-  // const copyToClipboard = (text: string) => {
-  //   navigator.clipboard.writeText(text).then(() => {
-  //     alert(`${text} copied to clipboard!`);
-  //   });
-  // };
+//   // const copyToClipboard = (text: string) => {
+//   //   navigator.clipboard.writeText(text).then(() => {
+//   //     alert(`${text} copied to clipboard!`);
+//   //   });
+//   // };
 
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
+//   const handleNextPage = () => {
+//     setCurrentPage((prevPage) => prevPage + 1);
+//   };
 
-  const handlePreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-  const columns = [
-    // { key: "profile", title: "Profile", type: "text" },
-    { key: "name", title: "User Name", type: "text" },
-    { key: "phone", title: "Contact Number", type: "text" },
-    { key: "email", title: "Email ID", type: "email" },
-    { key: "message", title: "Messages", type: "text" },
-  ];
+//   const handlePreviousPage = () => {
+//     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+//   };
+//   const columns = [
+//     // { key: "profile", title: "Profile", type: "text" },
+//     { key: "name", title: "User Name", type: "text" },
+//     { key: "phone", title: "Contact Number", type: "text" },
+//     { key: "email", title: "Email ID", type: "email" },
+//     { key: "message", title: "Messages", type: "text" },
+//   ];
 
-  console.log(ContactsData);
-  return (
-    <div
-      className={`h-screen w-full flex flex-col ${
-        darkMode ? "bg-secondary-dark text-white" : "bg-white text-black"
-      }`}
-    >
-      {/* Header */}
-      <header className="flex justify-between items-center p-2 border-b border-gray-600">
-        <h1 className="text-lg font-semibold flex gap-2 items-center md:mb-0">
-          <button
-            className={`lg:hidden xl:hidden p-2 rounded bg-secondary-dark text-white shadow-lg z-50`}
-            onClick={toggleMobileSidebar}
-          >
-            <MdViewSidebar className="h-5 w-5" />
-          </button>
-          Contacts
-        </h1>
-        <Button
-          text={"Export"}
-          needIcon={false}
-          onClick={() => exportToCSV(data.data.contacts)}
-        />
-        {/* <button
-          onClick={() => exportToCSV(data.data.contacts)}
-          className="bg-blueButton text-white px-4 py-2 rounded hover:bg-blueButton-hover"
-        >
-          Export
-        </button> */}
-      </header>
+//   console.log(ContactsData);
+//   return (
+//     <div
+//       className={`h-screen w-full flex flex-col ${
+//         darkMode ? "bg-secondary-dark text-white" : "bg-white text-black"
+//       }`}
+//     >
+//       {/* Header */}
+//       <header className="flex justify-between items-center p-2 border-b border-gray-600">
+//         <h1 className="text-lg font-semibold flex gap-2 items-center md:mb-0">
+//           <button
+//             className={`lg:hidden xl:hidden p-2 rounded bg-secondary-dark text-white shadow-lg z-50`}
+//             onClick={toggleMobileSidebar}
+//           >
+//             <MdViewSidebar className="h-5 w-5" />
+//           </button>
+//           Contacts
+//         </h1>
+//         <Button
+//           text={"Export"}
+//           needIcon={false}
+//           onClick={() => exportToCSV(data.data.contacts)}
+//         />
+//         {/* <button
+//           onClick={() => exportToCSV(data.data.contacts)}
+//           className="bg-blueButton text-white px-4 py-2 rounded hover:bg-blueButton-hover"
+//         >
+//           Export
+//         </button> */}
+//       </header>
 
-      {/* Table Container */}
+//       {/* Table Container */}
 
-      <div className="flex-1 custom-scrollbar overflow-hidden ">
-        <div className="min-w-full p-1 overflow-auto">
-          {data?.data?.contacts?.length < 0 ? (
-            <p>no data</p>
-          ) : (
-            <Table
-              darkMode={true}
-              columns={columns as any}
-              loading={data.isLoading}
-              data={data?.data?.contacts}
-            />
-          )}
-        </div>
-      </div>
+//       <div className="flex-1 custom-scrollbar overflow-hidden ">
+//         <div className="min-w-full p-1 overflow-auto">
+//           {data?.data?.contacts?.length < 0 ? (
+//             <p>no data</p>
+//           ) : (
+//             <Table
+//               darkMode={true}
+//               columns={columns as any}
+//               loading={data.isLoading}
+//               data={data?.data?.contacts}
+//             />
+//           )}
+//         </div>
+//       </div>
 
-      {/* <div className="flex-1 overflow-hidden p-4">
+{
+  /* <div className="flex-1 overflow-hidden p-4">
         {data.isLoading ? (
           <div className="flex items-center justify-center h-full">
             <div className="loader" />
@@ -335,10 +336,14 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
             </table>
           </div>
         )}
-      </div> */}
+      </div> */
+}
 
-      {/* Pagination */}
-      <div className="flex justify-center items-center p-3 bg-gray-700 rounded-t-lg shadow-md">
+{
+  /* Pagination */
+}
+{
+  /* <div className="flex justify-center items-center p-3 bg-gray-700 rounded-t-lg shadow-md">
         <button
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
@@ -372,6 +377,165 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
 };
 
 // Example usage of the component
+const Contacts: React.FC = () => {
+  return <TablePage darkMode={true} />;
+};
+
+export default Contacts; */
+}
+
+import React, { useEffect, useMemo, useState } from "react";
+import { MdViewSidebar } from "react-icons/md";
+import useSidebarStore from "../store/sidebar";
+import { useContacts } from "../hook/useContacts";
+import { Contact, ContactsData } from "../types/types";
+import Table from "../components/table/main";
+// import Button from "../components/button/main";
+import { Column } from "../components/table/main"; // assuming Column is exported
+import "../index.css";
+
+const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
+  const { toggleMobileSidebar } = useSidebarStore();
+  const { getContacts } = useContacts();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const itemsPerPage = 25;
+  const { data, isLoading, refetch } = getContacts(currentPage, itemsPerPage);
+  const ContactsData = data as ContactsData;
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage]);
+
+  const filteredContacts = useMemo(() => {
+    if (!ContactsData?.contacts) return [];
+    return ContactsData.contacts.filter((contact: Contact) =>
+      contact.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [ContactsData, searchTerm]);
+
+  // const handleExportCSV = async () => {
+  //   const { data } = await getContacts(1, ContactsData?.totalContacts || 1000);
+  //   const allContacts = data?.contacts || [];
+
+  //   const csvContent = [
+  //     ["Name", "Email", "Phone", "Message", "Location"],
+  //     ...allContacts.map((contact: Contact) => [
+  //       contact.name,
+  //       contact.email,
+  //       contact.phone,
+  //       contact.message,
+  //       contact.location || "None",
+  //     ]),
+  //   ]
+  //     .map((row) => row.join(","))
+  //     .join("\n");
+
+  //   const blob = new Blob([csvContent], { type: "text/csv" });
+  //   const link = document.createElement("a");
+  //   link.href = URL.createObjectURL(blob);
+  //   link.download = "contacts.csv";
+  //   link.click();
+  // };
+
+  const handleNextPage = () => setCurrentPage((prev) => prev + 1);
+  const handlePreviousPage = () =>
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+
+  const columns: Column[] = [
+    { key: "name", title: "User Name", type: "text" },
+    { key: "phone", title: "Contact Number", type: "text" },
+    { key: "email", title: "Email ID", type: "email" },
+    { key: "message", title: "Messages", type: "text" },
+    { key: "location", title: "Location", type: "text" },
+  ];
+
+  return (
+    <div
+      className={`min-h-screen w-full flex flex-col ${
+        darkMode ? "bg-secondary-dark text-white" : "bg-white text-black"
+      }`}
+    >
+      {/* Header */}
+      <header className="flex flex-col sm:flex-row justify-between items-center px-4 py-3 border-b border-gray-600 shadow-md bg-opacity-90 backdrop-blur-md gap-2 sm:gap-0">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <button
+            className="lg:hidden p-2 rounded bg-gray-800 hover:bg-gray-700 transition"
+            onClick={toggleMobileSidebar}
+          >
+            <MdViewSidebar className="h-5 w-5 text-white" />
+          </button>
+          <h1 className="text-xl font-bold">Contacts</h1>
+        </div>
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mt-2 sm:mt-0">
+          <input
+            type="text"
+            placeholder="Search by name..."
+            className="w-full sm:w-64 px-4 py-2 rounded border border-gray-400 text-black"
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {/* <Button
+            text="Export"
+            onClick={handleExportCSV}
+            className="shadow-lg"
+            needIcon={false}
+          /> */}
+        </div>
+      </header>
+
+      {/* Table */}
+      <div className="flex-1 overflow-auto custom-scrollbar p-4">
+        {isLoading ? (
+          <p className="text-center text-sm text-gray-400">Loading...</p>
+        ) : filteredContacts?.length === 0 ? (
+          <p className="text-center text-sm text-gray-400">
+            No contacts found.
+          </p>
+        ) : (
+          <Table
+            darkMode={darkMode}
+            columns={columns}
+            loading={isLoading}
+            data={filteredContacts.map((contact: Contact) => ({
+              ...contact,
+              location: contact.location || "None",
+            }))}
+          />
+        )}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center items-center p-4 bg-gray-700 rounded-t-lg shadow-lg flex-wrap gap-2">
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={`w-28 px-4 py-2 bg-gray-600 text-white rounded-full text-sm hover:bg-gray-500 transition ${
+            currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          Previous
+        </button>
+        <span className="font-medium text-sm text-gray-300">
+          Page {currentPage}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={ContactsData?.pageCount <= currentPage}
+          className={`w-28 px-4 py-2 bg-gray-600 text-white rounded-full text-sm hover:bg-gray-500 transition ${
+            ContactsData?.pageCount <= currentPage
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+          }`}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const Contacts: React.FC = () => {
   return <TablePage darkMode={true} />;
 };

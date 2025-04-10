@@ -6,6 +6,7 @@ export interface User {
   }
   
   export interface Contact {
+    location: string;
     id: number;
     name: string;
     email: string;
