@@ -399,15 +399,26 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
   const { getContacts } = useContacts();
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPageCount, setTotalPageCount] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState("");
 
   const itemsPerPage = 25;
   const { data, isLoading, refetch } = getContacts(currentPage, itemsPerPage);
   const ContactsData = data as ContactsData;
 
+  // Scroll to top on page change
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     refetch();
   }, [currentPage]);
+
+  // Set last page as starting point after initial fetch
+  useEffect(() => {
+    if (data?.pageCount && currentPage === 1) {
+      setTotalPageCount(data.pageCount);
+      setCurrentPage(data.pageCount);
+    }
+  }, [data]);
 
   const filteredContacts = useMemo(() => {
     if (!ContactsData?.contacts) return [];
@@ -416,33 +427,15 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
     );
   }, [ContactsData, searchTerm]);
 
-  // const handleExportCSV = async () => {
-  //   const { data } = await getContacts(1, ContactsData?.totalContacts || 1000);
-  //   const allContacts = data?.contacts || [];
-
-  //   const csvContent = [
-  //     ["Name", "Email", "Phone", "Message", "Location"],
-  //     ...allContacts.map((contact: Contact) => [
-  //       contact.name,
-  //       contact.email,
-  //       contact.phone,
-  //       contact.message,
-  //       contact.location || "None",
-  //     ]),
-  //   ]
-  //     .map((row) => row.join(","))
-  //     .join("\n");
-
-  //   const blob = new Blob([csvContent], { type: "text/csv" });
-  //   const link = document.createElement("a");
-  //   link.href = URL.createObjectURL(blob);
-  //   link.download = "contacts.csv";
-  //   link.click();
-  // };
-
-  const handleNextPage = () => setCurrentPage((prev) => prev + 1);
-  const handlePreviousPage = () =>
+  // Navigate to older (lower page numbers)
+  const handleNextPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  // Navigate to newer (higher page numbers)
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPageCount));
+  };
 
   const columns: Column[] = [
     { key: "name", title: "User Name", type: "text" },
@@ -510,26 +503,24 @@ const TablePage: React.FC<{ darkMode: boolean }> = ({ darkMode }) => {
       <div className="flex justify-center items-center p-4 bg-gray-700 rounded-t-lg shadow-lg flex-wrap gap-2">
         <button
           onClick={handlePreviousPage}
+          disabled={currentPage >= totalPageCount}
+          className={`w-28 px-4 py-2 bg-gray-600 text-white rounded-full text-sm hover:bg-gray-500 transition ${
+            currentPage >= totalPageCount ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+        >
+          Newer
+        </button>
+        <span className="font-medium text-sm text-gray-300">
+          Page {currentPage} of {totalPageCount}
+        </span>
+        <button
+          onClick={handleNextPage}
           disabled={currentPage === 1}
           className={`w-28 px-4 py-2 bg-gray-600 text-white rounded-full text-sm hover:bg-gray-500 transition ${
             currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          Previous
-        </button>
-        <span className="font-medium text-sm text-gray-300">
-          Page {currentPage}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={ContactsData?.pageCount <= currentPage}
-          className={`w-28 px-4 py-2 bg-gray-600 text-white rounded-full text-sm hover:bg-gray-500 transition ${
-            ContactsData?.pageCount <= currentPage
-              ? "opacity-50 cursor-not-allowed"
-              : ""
-          }`}
-        >
-          Next
+          Older
         </button>
       </div>
     </div>
@@ -541,3 +532,27 @@ const Contacts: React.FC = () => {
 };
 
 export default Contacts;
+
+// const handleExportCSV = async () => {
+//   const { data } = await getContacts(1, ContactsData?.totalContacts || 1000);
+//   const allContacts = data?.contacts || [];
+
+//   const csvContent = [
+//     ["Name", "Email", "Phone", "Message", "Location"],
+//     ...allContacts.map((contact: Contact) => [
+//       contact.name,
+//       contact.email,
+//       contact.phone,
+//       contact.message,
+//       contact.location || "None",
+//     ]),
+//   ]
+//     .map((row) => row.join(","))
+//     .join("\n");
+
+//   const blob = new Blob([csvContent], { type: "text/csv" });
+//   const link = document.createElement("a");
+//   link.href = URL.createObjectURL(blob);
+//   link.download = "contacts.csv";
+//   link.click();
+// };
