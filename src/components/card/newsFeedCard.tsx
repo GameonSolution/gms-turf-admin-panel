@@ -1,116 +1,143 @@
-import { FaEdit, FaInstagram, FaTrashAlt, } from "react-icons/fa";
-import { motion } from "framer-motion"; // Ensure framer-motion is installed
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { motion } from "framer-motion";
 import { NewsFeed } from "../../types/types";
 import { useState } from "react";
 
 type NewsFeedCardProps = {
   newsFeed: NewsFeed;
-  height:any
+  height: any;
   handleDelete: (id: number) => void;
-  handleEdit: (newsFeed: NewsFeed) => void; // Function to handle editing
+  handleEdit: (newsFeed: NewsFeed) => void;
 };
 
-const NewsFeedCard = ({ newsFeed, handleEdit, handleDelete }: NewsFeedCardProps) => {
-  // Extracting the first letter from newsFeed details
+const NewsFeedCard = ({
+  newsFeed,
+  handleEdit,
+  handleDelete,
+}: NewsFeedCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
   const getYoutubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : null;
   };
+
   const maxDescriptionLength = 50;
   const toggleExpand = () => setIsExpanded((prev) => !prev);
 
   const displayText = isExpanded
     ? newsFeed.details
-    : newsFeed.details.slice(0, maxDescriptionLength) + 
+    : newsFeed.details.slice(0, maxDescriptionLength) +
       (newsFeed.details.length > maxDescriptionLength ? "..." : "");
+
+  // confirm then delete
+  const confirmAndDelete = (id: number) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this item? This action cannot be undone."
+    );
+    if (confirmed) {
+      handleDelete(id);
+    }
+  };
 
   return (
     <motion.div
-    key={newsFeed.id}
-    className={`relative border border-white border-opacity-30 shadow-lg p-4 rounded-lg transition-transform transform hover:scale-105 bg-gray-700 group overflow-hidden`}
-    whileHover={{ scale: 1.05 }}
-  >
-    <div className="flex justify-between items-center mb-3">
-      <p className="text-gray-400 text-xs">{new Date(newsFeed.date).toLocaleDateString()}</p>
-    </div>
-  
-    {/* Description Section */}
-    <div className="mb-4">
-      <p className="text-sm text-gray-300">{displayText}</p>
-      {newsFeed.details.length > maxDescriptionLength && (
-        <button
-          onClick={toggleExpand}
-          className="text-blue-500 text-xs mt-2 focus:outline-none hover:underline"
-        >
-          {isExpanded ? "View Less" : "View More"}
-        </button>
-      )}
-    </div>
-  
-    {/* Media Section */}
-    <div className="flex flex-col mb-4">
-      {newsFeed.mediaUrl && (
-        <div className="mt-2">
-          {newsFeed.fileType === "image" ? (
-            <img
-              src={newsFeed.mediaUrl}
-              alt="media preview"
-              className="rounded-lg w-full h-40 object-cover bg-gray-800"
-            />
-          ) : newsFeed.fileType === "video" ? (
-            <video
-              src={newsFeed.mediaUrl}
-              controls
-              className="rounded-lg w-full h-40 object-cover bg-gray-800"
-            />
-          ) : newsFeed.fileType === "instagram" ? (
-            <a
-              href={newsFeed.mediaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center h-40 bg-gray-800 text-white rounded-lg transition duration-300 hover:bg-gray-700"
-            >
-              <FaInstagram className="text-pink-500 text-2xl mr-2" />
-              <span className="text-sm">View on Instagram</span>
-            </a>
-          ) : newsFeed.fileType === "youtube" ? (
-            <div
-              className="relative h-40 rounded-lg overflow-hidden w-full"
-            >
-              <iframe
-                className="absolute top-0 left-0 w-full h-full"
-                src={`https://www.youtube.com/embed/${getYoutubeId(newsFeed.mediaUrl)}`}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title="YouTube video"
+      key={newsFeed.id}
+      className="relative border border-white border-opacity-30 shadow-lg p-4 rounded-lg transition-transform transform hover:scale-105 bg-gray-700 group overflow-hidden"
+      whileHover={{ scale: 1.05 }}
+      role="article"
+      aria-labelledby={`newsfeed-title-${newsFeed.id}`}
+    >
+      {/* Date */}
+      <div className="flex justify-between items-center mb-3">
+        <p className="text-gray-400 text-xs" aria-label="published date">
+          {new Date(newsFeed.date).toLocaleDateString()}
+        </p>
+      </div>
+
+      {/* Description */}
+      <div className="mb-4">
+        <p className="text-sm text-gray-300">{displayText}</p>
+        {newsFeed.details.length > maxDescriptionLength && (
+          <button
+            onClick={toggleExpand}
+            className="text-blue-500 text-xs mt-2 focus:outline-none hover:underline"
+            aria-expanded={isExpanded}
+          >
+            {isExpanded ? "View Less" : "View More"}
+          </button>
+        )}
+      </div>
+
+      {/* Media Section */}
+      <div className="flex flex-col mb-4">
+        {newsFeed.mediaUrl && (
+          <div className="mt-2">
+            {newsFeed.fileType === "image" ? (
+              <img
+                src={newsFeed.mediaUrl}
+                alt="media preview"
+                className="rounded-lg w-full h-40 object-cover bg-gray-800"
               />
-            </div>
-          ) : null}
-        </div>
-      )}
-    </div>
-  
-    {/* Action Buttons */}
-    <div className="flex items-end justify-end w-full absolute top-3 right-2">
-      <button
-        onClick={() => handleEdit(newsFeed)}
-        className="text-white p-1 rounded flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-      >
-        <FaEdit className="text-lg text-white hover:animate-bounce" />
-      </button>
-      <button
-        onClick={() => handleDelete(newsFeed.id)}
-        className="text-white p-1 rounded flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-      >
-        <FaTrashAlt className="text-lg text-white hover:animate-bounce" />
-      </button>
-    </div>
-  </motion.div>
-  
-  
+            ) : newsFeed.fileType === "video" ? (
+              <video
+                src={newsFeed.mediaUrl}
+                controls
+                className="rounded-lg w-full h-40 object-cover bg-gray-800"
+              />
+            ) : newsFeed.fileType === "youtube" ? (
+              <div className="relative h-40 rounded-lg overflow-hidden w-full">
+                <iframe
+                  className="absolute top-0 left-0 w-full h-full"
+                  src={`https://www.youtube.com/embed/${getYoutubeId(
+                    newsFeed.mediaUrl
+                  )}`}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="YouTube video"
+                />
+              </div>
+            ) : newsFeed.fileType === "instagram" ? (
+              <div className="relative w-full h-40 rounded-lg overflow-hidden">
+                {/* Instagram Embed */}
+                <iframe
+                  src={`https://www.instagram.com/p/${
+                    newsFeed.mediaUrl.split("/p/")[1]?.split("/")[0]
+                  }/embed`}
+                  className="absolute top-0 left-0 w-full h-full"
+                  frameBorder="0"
+                  allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+                  scrolling="no"
+                  allowFullScreen
+                  title="Instagram video"
+                />
+              </div>
+            ) : null}
+          </div>
+        )}
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-end justify-end w-full absolute top-3 right-2">
+        <button
+          onClick={() => handleEdit(newsFeed)}
+          className="text-white p-1 rounded flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          aria-label="Edit news feed"
+        >
+          <FaEdit className="text-lg text-white hover:animate-bounce" />
+        </button>
+        <button
+          onClick={() => confirmAndDelete(newsFeed.id)}
+          className="text-white p-1 rounded flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          aria-label="Delete news feed"
+        >
+          <FaTrashAlt className="text-lg text-white hover:animate-bounce" />
+        </button>
+      </div>
+    </motion.div>
   );
 };
 
